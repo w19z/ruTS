@@ -84,7 +84,9 @@ class MorphStats:
             raise ValueError("В источнике данных отсутствуют слова")
 
         morph = pymorphy2.MorphAnalyzer()
-        self.tags = tuple(morph.parse(word)[0].tag for word in self.words)
+        word_counts = Counter(self.words)
+        parsed_tags = {word: morph.parse(word)[0].tag for word in word_counts}
+        self.tags = tuple(parsed_tags[word] for word in self.words)
         self.pos = tuple(tag.POS for tag in self.tags)
         self.animacy = tuple(tag.animacy for tag in self.tags)
         self.aspect = tuple(tag.aspect for tag in self.tags)
